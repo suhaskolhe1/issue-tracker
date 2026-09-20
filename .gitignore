@@ -1,0 +1,25 @@
+# IDEs and Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# MacOS
+.DS_Store
+
+# Java / Maven (Just in case, though the backend folder has its own)
+target/
+*.jar
+*.war
+*.zip
+*.class
+
+# Node / React (Just in case, though the frontend folder has its own)
+node_modules/
+dist/
+build/
+.env
+.env.local
+
+# Logs
+*.log
