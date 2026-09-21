@@ -3,7 +3,7 @@ spring:
     name: issue-tracker-backend
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/issue_tracker
+    url: jdbc:postgresql://localhost:15432/issue_tracker
     username: admin
     password: password
     driver-class-name: org.postgresql.Driver

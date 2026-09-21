@@ -17,10 +17,9 @@ export const Login: React.FC = () => {
         try {
             const response = await loginUser({ email, password });
 
-            // For now, we will just log the token to prove it works!
-            // Later we will save this token to localStorage or context.
-            console.log("SUCCESS! JWT Token:", response.token);
-            alert("Login successful! Check console for token.");
+            localStorage.setItem('token', response.token);
+
+            window.location.href = '/projects';
 
         } catch (err: any) {
             setError(err.response?.data?.message || 'Invalid credentials or server error.');

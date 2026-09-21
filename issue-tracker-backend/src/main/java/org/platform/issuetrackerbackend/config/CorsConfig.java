@@ -15,8 +15,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins("http://localhost:5173") // Our Vite frontend port
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedOrigins("http://localhost:5173", "http://127.0.0.1:3000", "http://localhost:3000")
                         .allowedHeaders("*")
                         .allowCredentials(true);
             }
