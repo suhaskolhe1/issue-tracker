@@ -33,8 +33,16 @@ export interface CreateIssueRequest {
     projectId: number;
 }
 
-export const getIssuesByProject = async (projectId: number): Promise<Issue[]> => {
-    const response = await apiClient.get<Issue[]>(`/issues/project/${projectId}`);
+export const getIssuesByProject = async (
+    projectId: number,
+    status?: string,
+    priority?: string
+): Promise<Issue[]> => {
+    let url = `/issues/project/${projectId}?`;
+    if (status) url += `status=${status}&`;
+    if (priority) url += `priority=${priority}`;
+
+    const response = await apiClient.get<Issue[]>(url);
     return response.data;
 };
 

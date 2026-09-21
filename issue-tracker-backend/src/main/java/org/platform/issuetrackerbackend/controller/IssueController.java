@@ -23,10 +23,6 @@ public class IssueController {
         return ResponseEntity.ok(issueService.createIssue(request));
     }
 
-    @GetMapping("/project/{projectId}")
-    public ResponseEntity<List<Issue>> getIssuesByProject(@PathVariable Long projectId) {
-        return ResponseEntity.ok(issueService.getIssuesByProject(projectId));
-    }
 
     @PatchMapping("/{issueId}/status")
     public ResponseEntity<Issue> updateStatus(
@@ -46,4 +42,14 @@ public class IssueController {
             @RequestBody String content) {
         return ResponseEntity.ok(issueService.addComment(issueId, content));
     }
+
+    @GetMapping("/project/{projectId}")
+    public ResponseEntity<List<Issue>> getIssuesByProject(
+            @PathVariable Long projectId,
+            @RequestParam(required = false) org.platform.issuetrackerbackend.entity.Status status,
+            @RequestParam(required = false) org.platform.issuetrackerbackend.entity.Priority priority) {
+
+        return ResponseEntity.ok(issueService.getIssuesByProject(projectId, status, priority));
+    }
+
 }

@@ -2,6 +2,7 @@ package org.platform.issuetrackerbackend.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.platform.issuetrackerbackend.dto.ProjectRequest;
+import org.platform.issuetrackerbackend.dto.ProjectResponse;
 import org.platform.issuetrackerbackend.entity.Project;
 import org.platform.issuetrackerbackend.service.ProjectService;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +25,8 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<String> getProject(@PathVariable Long id) {
-        return ResponseEntity.ok("Project details will go here soon!");
+    public ResponseEntity<ProjectResponse> getProject(@PathVariable Long id) {
+        return ResponseEntity.ok(projectService.getProjectById(id));
     }
 
     @GetMapping

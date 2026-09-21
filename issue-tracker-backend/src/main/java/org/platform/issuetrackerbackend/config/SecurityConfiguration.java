@@ -31,6 +31,8 @@ public class SecurityConfiguration {
                         auth.dispatcherTypeMatchers(jakarta.servlet.DispatcherType.ERROR).permitAll()
                                 .requestMatchers("/api/health").permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/projects/**").permitAll()
+
                                 .requestMatchers("/error").permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

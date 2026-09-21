@@ -2,12 +2,14 @@ package org.platform.issuetrackerbackend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "projects")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-public class Project {
+public class Project implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

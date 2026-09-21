@@ -119,4 +119,11 @@ public class IssueService {
                         .build();
         return commentRepository.save(comment);
     }
+    public List<Issue> getIssuesByProject(
+            Long projectId,
+            org.platform.issuetrackerbackend.entity.Status status,
+            org.platform.issuetrackerbackend.entity.Priority priority) {
+
+        return issueRepository.findFilteredIssues(projectId, status, priority);
+    }
 }

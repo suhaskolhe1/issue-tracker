@@ -24,11 +24,15 @@ export const ProjectIssues: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'list' | 'board'>('board'); // Default to our cool new board!
 
+  const [statusFilter, setStatusFilter] = useState<string>('');
+  const [priorityFilter, setPriorityFilter] = useState<string>('');
+
   const projectId = 1;
 
   const { data: issues, isLoading } = useQuery({
-    queryKey: ['issues', projectId],
-    queryFn: () => getIssuesByProject(projectId),
+    // Adding them to the queryKey means React Query will auto-refetch when they change!
+    queryKey: ['issues', projectId, statusFilter, priorityFilter],
+    queryFn: () => getIssuesByProject(projectId, statusFilter || undefined, priorityFilter || undefined),
   });
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm<IssueFormValues>({
@@ -88,6 +92,32 @@ export const ProjectIssues: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-4">
+            {/* Filter Dropdowns */}
+            <div className="flex gap-2 mr-4">
+              <select
+                  value={statusFilter}
+                  onChange={e => setStatusFilter(e.target.value)}
+                  className="px-3 py-1.5 bg-white border border-stone-300 rounded-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-accent"
+              >
+                <option value="">All Statuses</option>
+                <option value="TODO">To Do</option>
+                <option value="IN_PROGRESS">In Progress</option>
+                <option value="DONE">Done</option>
+              </select>
+
+              <select
+                  value={priorityFilter}
+                  onChange={e => setPriorityFilter(e.target.value)}
+                  className="px-3 py-1.5 bg-white border border-stone-300 rounded-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-accent"
+              >
+                <option value="">All Priorities</option>
+                <option value="HIGH">High</option>
+                <option value="CRITICAL">Critical</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="LOW">Low</option>
+              </select>
+            </div>
+
             {/* View Toggle */}
             <div className="flex bg-stone-200/50 p-1 rounded-sm border border-stone-200">
               <button
