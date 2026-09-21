@@ -1,4 +1,9 @@
 package org.platform.issuetrackerbackend.entity;
 
-public class IssueType {
+public enum IssueType {
+    EPIC,
+    STORY,
+    TASK,
+    BUG,
+    SUBTASK
 }

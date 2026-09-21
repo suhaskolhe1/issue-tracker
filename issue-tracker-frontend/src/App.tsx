@@ -3,6 +3,7 @@ import { Login } from './pages/Login';
 import { Layout } from './components/Layout';
 import { Projects } from './pages/Projects';
 import { ProjectIssues } from './pages/ProjectIssues';
+import {IssueDetail} from "./pages/IssueDetail.tsx";
 
 const router = createBrowserRouter([
   {
@@ -25,8 +26,10 @@ const router = createBrowserRouter([
         path: 'issues',
         element: <ProjectIssues />
       },
-      // We will add more routes here later!
-    ]
+      {
+        path: 'issues/:id',
+        element: <IssueDetail />
+      },    ]
   }
 ]);
 

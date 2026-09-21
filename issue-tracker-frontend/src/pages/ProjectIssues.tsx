@@ -7,7 +7,7 @@ import { getIssuesByProject, createIssue } from '../features/issues/issueService
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { PlusIcon } from '@heroicons/react/24/outline';
-
+import { Link } from 'react-router-dom';
 // 1. Define our Zod Schema for validation
 const issueSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -46,7 +46,11 @@ export const ProjectIssues: React.FC = () => {
   });
 
   const onSubmit = (data: IssueFormValues) => {
-    createMutation.mutate({ ...data, projectId });
+    createMutation.mutate({
+      ...data,
+      description: data.description || '',
+      projectId
+    });
   };
 
   return (
@@ -80,7 +84,11 @@ export const ProjectIssues: React.FC = () => {
               {issues?.map(issue => (
                 <tr key={issue.id} className="border-b border-stone-100 hover:bg-stone-50 transition-colors">
                   <td className="px-4 py-3 font-medium text-stone-900">{issue.issueKey}</td>
-                  <td className="px-4 py-3">{issue.title}</td>
+                  <td className="px-4 py-3">
+                    <Link to={`/issues/${issue.id}`} className="font-medium text-accent hover:underline">
+                      {issue.title}
+                    </Link>
+                  </td>
                   <td className="px-4 py-3">{issue.type}</td>
                   <td className="px-4 py-3">{issue.priority}</td>
                   <td className="px-4 py-3">
