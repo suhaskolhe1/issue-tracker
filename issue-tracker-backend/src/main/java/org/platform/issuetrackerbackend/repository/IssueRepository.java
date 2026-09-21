@@ -19,4 +19,8 @@ public interface IssueRepository extends JpaRepository<Issue, Long> {
             @Param("projectId") Long projectId,
             @Param("status") Status status,
             @Param("priority") Priority priority);
+
+    @Query("SELECT i.status, COUNT(i) FROM Issue i WHERE i.project.id = :projectId GROUP BY i.status")
+    List<Object[]> countIssuesByStatus(@Param("projectId") Long projectId);
+
 }
