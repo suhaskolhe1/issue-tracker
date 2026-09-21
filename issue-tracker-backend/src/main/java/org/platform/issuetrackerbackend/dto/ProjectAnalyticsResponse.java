@@ -1,0 +1,4 @@
+package org.platform.issuetrackerbackend.dto;
+
+public class ProjectAnalyticsResponse {
+}

@@ -3,11 +3,12 @@ import { Outlet, NavLink } from 'react-router-dom';
 import { FolderIcon, CheckCircleIcon, UsersIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
 
 const navItems = [
-    { name: 'Projects', href: '/projects', icon: FolderIcon },
-    { name: 'My Issues', href: '/issues', icon: CheckCircleIcon },
+    { name: 'Dashboard', href: '/projects', icon: FolderIcon }, // <-- Renamed to Dashboard
+    { name: 'Issues & Kanban', href: '/issues', icon: CheckCircleIcon }, // <-- Renamed this!
     { name: 'Team', href: '/team', icon: UsersIcon },
     { name: 'Settings', href: '/settings', icon: Cog6ToothIcon },
 ];
+
 
 export const Layout: React.FC = () => {
     return (
