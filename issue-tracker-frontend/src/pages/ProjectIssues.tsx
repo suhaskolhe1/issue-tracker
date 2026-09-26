@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { getIssuesByProject, createIssue, updateIssueStatus } from '../features/issues/issueService';
+import { getIssuesByProject, createIssue, updateIssueStatus } from '../features/issues/issueService.ts';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { PlusIcon, ViewColumnsIcon, ListBulletIcon } from '@heroicons/react/24/outline';
@@ -26,14 +26,14 @@ export const ProjectIssues: React.FC = () => {
 
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [priorityFilter, setPriorityFilter] = useState<string>('');
-
+  const [page, setPage] = useState<number>(0);
   const projectId = 1;
 
-  const { data: issues, isLoading } = useQuery({
-    // Adding them to the queryKey means React Query will auto-refetch when they change!
-    queryKey: ['issues', projectId, statusFilter, priorityFilter],
-    queryFn: () => getIssuesByProject(projectId, statusFilter || undefined, priorityFilter || undefined),
+  const { data: paginatedData, isLoading } = useQuery({
+    queryKey: ['issues', projectId, statusFilter, priorityFilter, page], // Added page here
+    queryFn: () => getIssuesByProject(projectId, statusFilter || undefined, priorityFilter || undefined, page),
   });
+  const issues = paginatedData?.content || [];
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm<IssueFormValues>({
     resolver: zodResolver(issueSchema),
@@ -179,7 +179,32 @@ export const ProjectIssues: React.FC = () => {
                   )}
                   </tbody>
                 </table>
+                {/* Pagination Controls */}
+                {paginatedData && (
+                    <div className="flex items-center justify-between px-4 py-3 bg-white border border-t-0 border-stone-200 rounded-b-sm">
+                  <span className="text-sm text-stone-500">
+                      Showing page {paginatedData.number + 1} of {paginatedData.totalPages || 1} ({paginatedData.totalElements} total issues)
+                  </span>
+                      <div className="flex gap-2">
+                        <Button
+                            variant="outline"
+                            disabled={paginatedData.first}
+                            onClick={() => setPage(p => Math.max(0, p - 1))}
+                        >
+                          Previous
+                        </Button>
+                        <Button
+                            variant="outline"
+                            disabled={paginatedData.last}
+                            onClick={() => setPage(p => p + 1)}
+                        >
+                          Next
+                        </Button>
+                      </div>
+                    </div>
+                )}
               </div>
+
           ) : (
               <KanbanBoard issues={issues || []} onStatusChange={handleStatusChange} />
           )}

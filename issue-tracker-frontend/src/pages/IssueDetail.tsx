@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import {addComment, getIssueDetails, updateIssueStatus} from '../features/issues/issueService';
+import {addComment, getIssueDetails, updateIssueStatus, uploadAttachment} from '../features/issues/issueService';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 
 export const IssueDetail: React.FC = () => {
@@ -17,7 +17,6 @@ export const IssueDetail: React.FC = () => {
     const statusMutation = useMutation({
         mutationFn: (newStatus: string) => updateIssueStatus(Number(id), newStatus),
         onSuccess: () => {
-            // Refresh the data to instantly show the new audit log entry!
             queryClient.invalidateQueries({ queryKey: ['issue', id] });
         },
     });
@@ -34,6 +33,18 @@ export const IssueDetail: React.FC = () => {
         e.preventDefault();
         if (!newComment.trim()) return;
         commentMutation.mutate(newComment);
+    };
+    const uploadMutation = useMutation({
+        mutationFn: (file: File) => uploadAttachment(Number(id), file),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['issue', id] });
+        },
+    });
+
+    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            uploadMutation.mutate(e.target.files[0]);
+        }
     };
 
 
@@ -54,8 +65,6 @@ export const IssueDetail: React.FC = () => {
                         <span className="text-stone-400 font-medium mr-3">{issue.issueKey}</span>
                         {issue.title}
                     </h1>
-
-                    {/* Status Dropdown to trigger our Audit Log! */}
                     <select
                         className="px-3 py-1.5 bg-white border border-stone-300 rounded-sm text-sm font-medium focus:ring-2 focus:ring-accent outline-none"
                         value={issue.status}
@@ -70,13 +79,31 @@ export const IssueDetail: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-3 gap-8">
-                {/* Main Content */}
                 <div className="col-span-2 space-y-8">
                     <div className="bg-white border border-stone-200 rounded-sm p-6">
                         <h3 className="text-sm font-medium text-stone-900 mb-2">Description</h3>
                         <p className="text-stone-600 whitespace-pre-wrap">{issue.description || 'No description provided.'}</p>
+                        <div className="mt-6 pt-6 border-t border-stone-200">
+                            <h3 className="text-sm font-medium text-stone-900 mb-4">Attachments</h3>
+                            {issue.attachmentUrl ? (
+                                <div className="flex items-center gap-2 p-3 bg-stone-50 border border-stone-200 rounded-sm">
+                                    <span className="text-sm text-stone-600 truncate">{issue.attachmentUrl}</span>
+                                </div>
+                            ) : (
+                                <div>
+                                    <label className="cursor-pointer inline-flex items-center px-4 py-2 border border-stone-300 shadow-sm text-sm font-medium rounded-sm text-stone-700 bg-white hover:bg-stone-50">
+                                        {uploadMutation.isPending ? 'Uploading...' : 'Upload File'}
+                                        <input 
+                                            type="file" 
+                                            className="hidden" 
+                                            onChange={handleFileUpload} 
+                                            disabled={uploadMutation.isPending}
+                                        />
+                                    </label>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                {/* Comments Section */}
                 <div className="bg-white border border-stone-200 rounded-sm p-6 mt-8">
                     <h3 className="text-sm font-medium text-stone-900 mb-4">Comments</h3>
 
@@ -123,7 +150,6 @@ export const IssueDetail: React.FC = () => {
                 </div>
 
 
-                {/* Sidebar: Audit Timeline */}
                 <div className="col-span-1">
                     <h3 className="text-sm font-medium text-stone-900 mb-4">Activity</h3>
                     <div className="space-y-4">

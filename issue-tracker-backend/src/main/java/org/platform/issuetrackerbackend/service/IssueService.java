@@ -2,9 +2,11 @@ package org.platform.issuetrackerbackend.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.platform.issuetrackerbackend.dto.IssueRequest;
 import org.platform.issuetrackerbackend.entity.*;
 import org.platform.issuetrackerbackend.repository.*;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -119,11 +121,13 @@ public class IssueService {
                         .build();
         return commentRepository.save(comment);
     }
-    public List<Issue> getIssuesByProject(
+    public Page<Issue> getIssuesByProject(
             Long projectId,
-            org.platform.issuetrackerbackend.entity.Status status,
-            org.platform.issuetrackerbackend.entity.Priority priority) {
+            Status status,
+            Priority priority,
+            Pageable pageable
+    ) {
 
-        return issueRepository.findFilteredIssues(projectId, status, priority);
+        return issueRepository.findFilteredIssues(projectId, status, priority,pageable);
     }
 }

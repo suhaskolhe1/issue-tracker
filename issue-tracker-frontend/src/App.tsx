@@ -5,11 +5,16 @@ import {Projects} from './pages/Projects';
 import {ProjectIssues} from './pages/ProjectIssues';
 import {IssueDetail} from "./pages/IssueDetail.tsx";
 import {Dashboard} from "./pages/Dashboard.tsx";
+import {OAuth2Redirect} from "./pages/OAuth2Redirect.tsx";
 
 const router = createBrowserRouter([
     {
         path: '/login',
         element: <Login/>,
+    },
+    {
+        path: '/oauth2/redirect',
+        element: <OAuth2Redirect/>,
     },
     {
         path: '/',

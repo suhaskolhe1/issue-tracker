@@ -5,7 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.platform.issuetrackerbackend.dto.IssueRequest;
 import org.platform.issuetrackerbackend.entity.Comment;
 import org.platform.issuetrackerbackend.entity.Issue;
+import org.platform.issuetrackerbackend.entity.Priority;
+import org.platform.issuetrackerbackend.entity.Status;
 import org.platform.issuetrackerbackend.service.IssueService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,12 +49,13 @@ public class IssueController {
     }
 
     @GetMapping("/project/{projectId}")
-    public ResponseEntity<List<Issue>> getIssuesByProject(
+    public ResponseEntity<Page<Issue>> getIssuesByProject(
             @PathVariable Long projectId,
-            @RequestParam(required = false) org.platform.issuetrackerbackend.entity.Status status,
-            @RequestParam(required = false) org.platform.issuetrackerbackend.entity.Priority priority) {
+            @RequestParam(required = false) Status status,
+            @RequestParam(required = false) Priority priority,
+            @PageableDefault(size = 10,sort = "createdAt")Pageable pageable) {
 
-        return ResponseEntity.ok(issueService.getIssuesByProject(projectId, status, priority));
+        return ResponseEntity.ok(issueService.getIssuesByProject(projectId, status, priority,pageable));
     }
 
 }

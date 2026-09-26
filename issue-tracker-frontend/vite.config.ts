@@ -5,7 +5,7 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000,
+    port: 4000,
     strictPort: true, // Fail if port 3000 is also taken, rather than trying 3001
     host: '127.0.0.1' // Force IPv4 to prevent the ::1 error
   }

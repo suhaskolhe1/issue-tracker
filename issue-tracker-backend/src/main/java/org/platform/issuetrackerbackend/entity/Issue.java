@@ -37,6 +37,8 @@ public class Issue {
 
     private Integer storyPoints;
 
+    private String attachmentUrl;
+
     // Which project does this belong to?
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)

@@ -5,11 +5,20 @@ export interface Issue {
     issueKey: string;
     title: string;
     description: string;
+    attachmentUrl?: string;
     type: 'EPIC' | 'STORY' | 'TASK' | 'BUG' | 'SUBTASK';
     status: 'TODO' | 'IN_PROGRESS' | 'IN_REVIEW' | 'TESTING' | 'DONE' | 'CLOSED';
     priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 }
-
+export interface PaginatedResponse<T>{
+    content: T[];
+    totalPages: number;
+    totalElements: number;
+    size: number;
+    number: number;
+    first: boolean;
+    last: boolean;
+}
 export interface IssueActivity {
     id: number;
     actionType: string;
@@ -36,13 +45,14 @@ export interface CreateIssueRequest {
 export const getIssuesByProject = async (
     projectId: number,
     status?: string,
-    priority?: string
-): Promise<Issue[]> => {
-    let url = `/issues/project/${projectId}?`;
+    priority?: string,
+    page: number = 0
+): Promise<PaginatedResponse<Issue>> => {
+    let url = `/issues/project/${projectId}?page=${page}&size=10&`;
     if (status) url += `status=${status}&`;
     if (priority) url += `priority=${priority}`;
 
-    const response = await apiClient.get<Issue[]>(url);
+    const response = await apiClient.get<PaginatedResponse<Issue>>(url);
     return response.data;
 };
 
@@ -63,6 +73,18 @@ export const updateIssueStatus = async (issueId: number, status: string): Promis
 export const addComment = async (issueId: number, content: string): Promise<any> => {
     const response = await apiClient.post(`/issues/${issueId}/comments`, content, {
         headers: {'Content-Type': 'text/plain'} // We are just sending plain text!
+    });
+    return response.data;
+};
+
+
+export const uploadAttachment = async (issueId: number, file: File): Promise<string> => {
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await apiClient.post<string>(`/files/issue/${issueId}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
     });
     return response.data;
 };

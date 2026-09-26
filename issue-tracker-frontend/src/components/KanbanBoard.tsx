@@ -1,6 +1,6 @@
 import React from 'react';
 import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd';
-import { type Issue } from '../features/issues/issueService';
+import { type Issue } from '../features/issues/issueService.ts';
 import { Link } from 'react-router-dom';
 
 // The columns we want on our board
